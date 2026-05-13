@@ -1,0 +1,11 @@
+schemaVersion: 2.2.0
+metadata:
+  name: my-php-app
+components:
+  - name: php-runtime
+    container:
+      image: registry.redhat.io/devspaces/udi-rhel9:latest
+      memoryLimit: 2G
+      endpoints:
+        - name: http-php
+          targetPort: 8080
