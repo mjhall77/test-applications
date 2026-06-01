@@ -2,24 +2,28 @@ schemaVersion: 2.2.2
 metadata:
   name: php-hello-world
 components:
-  - name: dev-share-pvc
-    kubernetes:
-      inlined: |
-        apiVersion: v1
-        kind: PersistentVolumeClaim
-        metadata:
-          name: ww-share-pvc
-        spec:
-          accessModes:
-            - ReadWriteMany
-          resources:
-            requests:
-              storage: 10Gi
-          volumeName: ww-share-pv
+#  - name: dev-share-pvc
+#    kubernetes:
+#      inlined: |
+#        apiVersion: v1
+#        kind: PersistentVolumeClaim
+#        metadata:
+#          name: ww-share-pvc
+#        spec:
+#          accessModes:
+#            - ReadWriteMany
+#          resources:
+#            requests:
+#              storage: 10Gi
+#          volumeName: ww-share-pv
+
   - name: ww-share
     volume:
       size: 10Gi
-      storageClassName: nfs-manual
+      volumeName: ww-share-pv
+      accessModes:
+        - ReadWriteMany
+
   - name: tools
     container:
       image: registry.redhat.io/devspaces/udi-rhel9:3.22
