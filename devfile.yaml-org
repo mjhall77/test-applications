@@ -9,22 +9,6 @@ components:
       memoryRequest: '1Gi'
       cpuLimit: '1'
       cpuRequest: '0.5'
-      volumeMounts:
-        - name: direct-nfs-mount
-          path: /data
-  - name: direct-nfs-mount
-    kubernetes:
-      inlined: |
-        kind: Pod
-        spec:
-          containers:
-            - name: tools
-          volumes:
-            - name: direct-nfs-mount
-              nfs:
-                server: 192.168.1.202
-                path: /nfs_share
-                readOnly: false
 commands:
   - id: run
     exec:
