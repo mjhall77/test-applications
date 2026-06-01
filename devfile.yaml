@@ -2,7 +2,7 @@ schemaVersion: 2.2.2
 metadata:
   name: php-hello-world
 components:
-  - name: tools
+  - name: developer-ww-workspace
     container:
       image: registry.redhat.io/devspaces/udi-rhel9:3.22
       memoryLimit: '2Gi'
@@ -18,7 +18,7 @@ components:
         kind: Pod
         spec:
           containers:
-            - name: tools
+            - name: developer-ww-workspace
           volumes:
             - name: direct-nfs-mount
               nfs:
