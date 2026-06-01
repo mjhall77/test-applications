@@ -2,16 +2,6 @@ schemaVersion: 2.2.2
 metadata:
   name: php-hello-world
 components:
-  - name: tools
-    container:
-      image: registry.redhat.io/devspaces/udi-rhel9:3.22
-      memoryLimit: '2Gi'
-      memoryRequest: '1Gi'
-      cpuLimit: '1'
-      cpuRequest: '0.5'
-      volumeMounts:
-        - name: ww-share
-          path: /data
   - name: dev-share-pvc
     kubernetes:
       inlined: |
@@ -28,8 +18,18 @@ components:
           volumeName: ww-share-pv
   - name: ww-share
     volume:
-      ephemeral: false
-          storageClassName: nfs-manual
+      size: 10Gi
+      storageClassName: nfs-manual
+  - name: tools
+    container:
+      image: registry.redhat.io/devspaces/udi-rhel9:3.22
+      memoryLimit: '2Gi'
+      memoryRequest: '1Gi'
+      cpuLimit: '1'
+      cpuRequest: '0.5'
+      volumeMounts:
+        - name: ww-share
+          path: /data
 commands:
   - id: run
     exec:
