@@ -20,8 +20,11 @@ components:
   - name: ww-share
     volume:
       ephemeral: false
-    attributes:
-      pvcName: ww-share-pvc
+#    attributes:
+#      pvcName: ww-share-pvc
+      persistentVolumeClaim:
+        claimName: ww-share-pvc
+
 
   - name: tools
     container:
