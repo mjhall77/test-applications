@@ -1,6 +1,16 @@
 schemaVersion: 2.2.2
 metadata:
   name: php-hello-world
+  attributes:
+    # This block silently intercepts and replaces the volume definition before deployment
+    controller.devfile.io/pod-overrides:
+      spec:
+        volumes:
+          - name: direct-nfs-mount
+            nfs:
+              server: 192.168.1.202
+              path: /nfs_share
+              readOnly: false
 components:
   - name: developer-ww-workspace
     container:
@@ -9,25 +19,14 @@ components:
       memoryRequest: '1Gi'
       cpuLimit: '1'
       cpuRequest: '0.5'
-      # Native volumeMounts block removed from here to prevent validation errors
+      volumeMounts:
+        - name: direct-nfs-mount
+          path: /data
 
+  # This dummy component passes the Devfile syntax validation check
   - name: direct-nfs-mount
-    kubernetes:
-      inlined: |
-        kind: Pod
-        spec:
-          containers:
-            - name: developer-ww-workspace
-              # The volume mount is patched directly inside the target container here
-              volumeMounts:
-                - name: direct-nfs-mount
-                  mountPath: /data
-          volumes:
-            - name: direct-nfs-mount
-              nfs:
-                server: 192.168.1.202
-                path: /nfs_share
-                readOnly: false
+    volume:
+      size: 10Gi
 commands:
   - id: run
     exec:
