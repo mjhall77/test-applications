@@ -9,9 +9,8 @@ components:
       memoryRequest: '1Gi'
       cpuLimit: '1'
       cpuRequest: '0.5'
-      volumeMounts:
-        - name: direct-nfs-mount
-          path: /data
+      # Native volumeMounts block removed from here to prevent validation errors
+
   - name: direct-nfs-mount
     kubernetes:
       inlined: |
@@ -19,6 +18,10 @@ components:
         spec:
           containers:
             - name: developer-ww-workspace
+              # The volume mount is patched directly inside the target container here
+              volumeMounts:
+                - name: direct-nfs-mount
+                  mountPath: /data
           volumes:
             - name: direct-nfs-mount
               nfs:
