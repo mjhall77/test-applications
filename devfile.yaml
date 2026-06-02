@@ -1,18 +1,8 @@
 schemaVersion: 2.2.2
 metadata:
   name: php-hello-world
-  attributes:
-    # This block silently intercepts and replaces the volume definition before deployment
-    controller.devfile.io/pod-overrides:
-      spec:
-        volumes:
-          - name: direct-nfs-mount
-            nfs:
-              server: 192.168.1.202
-              path: /nfs_share
-              readOnly: false
 components:
-  - name: developer-ww-workspace
+  - name: tools
     container:
       image: registry.redhat.io/devspaces/udi-rhel9:3.22
       memoryLimit: '2Gi'
@@ -20,13 +10,14 @@ components:
       cpuLimit: '1'
       cpuRequest: '0.5'
       volumeMounts:
-        - name: direct-nfs-mount
-          path: /data
-
-  # This dummy component passes the Devfile syntax validation check
-  - name: direct-nfs-mount
-    volume:
-      size: 10Gi
+        - name: my-nfs-share
+          mountPath: /projects/nfs-data
+    volumes:
+      - name: my-nfs-share
+        nfs:
+          server: 192.168.1.202
+          path: /nfs_share
+          readOnly: false
 commands:
   - id: run
     exec:
