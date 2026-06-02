@@ -1,6 +1,16 @@
 schemaVersion: 2.2.2
 metadata:
   name: php-hello-world
+  # We use attributes to directly patch the underlying workspace infrastructure
+  attributes:
+    controller.devfile.io/pod-overrides:
+      spec:
+        volumes:
+          - name: direct-nfs-mount
+            nfs:
+              server: 192.168.1.202
+              path: /nfs_share
+              readOnly: false
 components:
   - name: developer-ww-workspace
     container:
@@ -9,25 +19,10 @@ components:
       memoryRequest: '1Gi'
       cpuLimit: '1'
       cpuRequest: '0.5'
-      # Native volumeMounts block removed from here to prevent validation errors
-
-  - name: direct-nfs-mount
-    kubernetes:
-      inlined: |
-        kind: Pod
-        spec:
-          containers:
-            - name: developer-ww-workspace
-              # The volume mount is patched directly inside the target container here
-              volumeMounts:
-                - name: direct-nfs-mount
-                  mountPath: /data
-          volumes:
-            - name: direct-nfs-mount
-              nfs:
-                server: 192.168.1.202
-                path: /nfs_share
-                readOnly: false
+      # Native devfile volume mounts work seamlessly when the volume is injected via pod-overrides!
+      volumeMounts:
+        - name: direct-nfs-mount
+          path: /data
 commands:
   - id: run
     exec:

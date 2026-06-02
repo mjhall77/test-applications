@@ -1,0 +1,39 @@
+schemaVersion: 2.2.2
+metadata:
+  name: php-hello-world
+components:
+  - name: developer-ww-workspace
+    container:
+      image: registry.redhat.io/devspaces/udi-rhel9:3.22
+      memoryLimit: '2Gi'
+      memoryRequest: '1Gi'
+      cpuLimit: '1'
+      cpuRequest: '0.5'
+      # Native volumeMounts block removed from here to prevent validation errors
+
+  - name: direct-nfs-mount
+    kubernetes:
+      inlined: |
+        kind: Pod
+        spec:
+          containers:
+            - name: developer-ww-workspace
+              # The volume mount is patched directly inside the target container here
+              volumeMounts:
+                - name: direct-nfs-mount
+                  mountPath: /data
+          volumes:
+            - name: direct-nfs-mount
+              nfs:
+                server: 192.168.1.202
+                path: /nfs_share
+                readOnly: false
+commands:
+  - id: run
+    exec:
+      label: "Run the application"
+      component: tools
+      workingDir: ${PROJECTS_ROOT}/php-hello-world
+      commandLine: php hello-world.php
+      group:
+        kind: run
