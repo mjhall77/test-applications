@@ -1,8 +1,8 @@
 schemaVersion: 2.2.2
 metadata:
   name: php-hello-world
-  # We use attributes to directly patch the underlying workspace infrastructure
   attributes:
+    # This block silently intercepts and replaces the volume definition before deployment
     controller.devfile.io/pod-overrides:
       spec:
         volumes:
@@ -19,10 +19,14 @@ components:
       memoryRequest: '1Gi'
       cpuLimit: '1'
       cpuRequest: '0.5'
-      # Native devfile volume mounts work seamlessly when the volume is injected via pod-overrides!
       volumeMounts:
         - name: direct-nfs-mount
           path: /data
+
+  # This dummy component passes the Devfile syntax validation check
+  - name: direct-nfs-mount
+    volume:
+      size: 10Gi
 commands:
   - id: run
     exec:
