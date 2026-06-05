@@ -11,10 +11,11 @@ components:
       cpuRequest: '0.5'
       volumeMounts:
         - name: share-pvc
-          path: /data # The path inside the container
+          path: /data
+          
   - name: share-pvc
     volume:
-      size: 5Gi # Adjust size as needed, or it will bind to your pre-existing PVC if names match
+      size: 5Gi
 commands:
   - id: run
     exec:
