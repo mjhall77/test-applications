@@ -9,27 +9,9 @@ components:
       memoryRequest: '1Gi'
       cpuLimit: '1'
       cpuRequest: '0.5'
-  
-  # This component injects the raw NFS volume and mounts it into the 'tools' container
-  - name: nfs-volume-injector
-    kubernetes:
-      inlined: |
-        apiVersion: apps/v1
-        kind: Deployment
-        spec:
-          template:
-            spec:
-              containers:
-                - name: tools # Must match the container component name above
-                  volumeMounts:
-                    - name: my-nfs-share
-                      mountPath: /projects/nfs-data
-              volumes:
-                - name: my-nfs-share
-                  nfs:
-                    server: 192.168.1.202
-                    path: /nfs_share
-                    readOnly: false
+      volumeMounts:
+        - name: share-pvc
+          path: /data # The path inside the container
 commands:
   - id: run
     exec:
